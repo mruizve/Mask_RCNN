@@ -31,6 +31,15 @@ assert LooseVersion(tf.__version__) >= LooseVersion("1.3")
 assert LooseVersion(keras.__version__) >= LooseVersion('2.0.8')
 
 
+from keras.backend.tensorflow_backend import set_session
+import tensorflow as tf
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True # dynamically grow the memory used on the GPU
+config.log_device_placement = False    # to log device placement (on which device the operation ran)
+sess = tf.compat.v1.Session(config=config)
+set_session(sess)                      # set this TensorFlow session as the default session for Keras
+
+
 ############################################################
 #  Utility Functions
 ############################################################
