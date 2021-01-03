@@ -1,0 +1,37 @@
+--- /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py	2021-01-03 22:39:21.342120085 +0000
++++ tensorflow_backend.py	2021-01-03 22:45:14.202373768 +0000
+@@ -419,7 +419,7 @@
+ def v1_variable_initialization():
+     session = get_session()
+     with session.graph.as_default():
+-        variables = tf.global_variables()
++        variables = tf.compat.v1.global_variables()
+         candidate_vars = []
+         for v in variables:
+             if not getattr(v, '_keras_initialized', False):
+@@ -428,14 +428,14 @@
+             # This step is expensive, so we only run it on variables
+             # not already marked as initialized.
+             is_initialized = session.run(
+-                [tf.is_variable_initialized(v) for v in candidate_vars])
++                [tf.compat.v1.is_variable_initialized(v) for v in candidate_vars])
+             uninitialized_vars = []
+             for flag, v in zip(is_initialized, candidate_vars):
+                 if not flag:
+                     uninitialized_vars.append(v)
+                 v._keras_initialized = True
+             if uninitialized_vars:
+-                session.run(tf.variables_initializer(uninitialized_vars))
++                session.run(tf.compat.v1.variables_initializer(uninitialized_vars))
+ 
+ 
+ # DEVICE MANIPULATION AND PROBING
+@@ -4067,7 +4067,7 @@
+         pool_size = (1, 1) + pool_size
+ 
+     if pool_mode == 'max':
+-        x = tf.nn.max_pool(x, pool_size, strides,
++        x = tf.nn.max_pool2d(x, pool_size, strides,
+                            padding=padding,
+                            data_format=tf_data_format)
+     elif pool_mode == 'avg':
